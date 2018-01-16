@@ -1,0 +1,144 @@
+body
+{
+padding:0px 5px 5px 5px;
+background-repeat:repeat-x;
+background-color:#FFFFFF;
+font-family:verdana;
+font-size:11px;
+color:#000000;
+}
+
+.body_print
+{
+padding:0px 5px 5px 5px;
+background-repeat:repeat-x;
+background-color:#FFFFFF;
+font-family:verdana;
+font-size:9px;
+color:#000000;
+}
+
+.text
+{
+padding:15px 15px 0px 15px;
+font-family:verdana;
+font-size:11px;
+color:#757576;
+}
+.whitetxt
+{
+font-family:verdana;
+font-size:11px;
+color:#FFFFFF;
+}
+a
+{
+color:#0000CC;
+font-weight:bold;
+font-size:11px;
+font-family:verdana;
+text-decoration:none;
+}
+a:hover
+{
+color:#FF3399;
+}
+a:visited{
+color:#0000CC;
+
+}
+a.blue
+{
+color:#0000CC;
+font-weight:normal;
+font-size:11px;
+font-family:verdana;
+text-decoration:underline;
+}
+a.blue:hover
+{
+color:#000000;
+}
+.right_box
+{
+font-family:verdana;
+font-size:11px;
+color:#757576;
+padding:15px 15px 15px 15px;
+border:1px solid #d6d6d6;
+}
+.header
+{
+color:#14728d;
+font-size:13px;
+font-weight:bold;
+}
+
+.arrowtext
+{
+color:#14728d;
+font-size:11px;
+font-weight:bold;
+line-height:18px;
+background-position:left;
+background-repeat:no-repeat;
+}
+/*form*/
+form{
+padding:0px;
+margin:0px;
+}
+.formext{
+font-family:verdana;
+font-size:10px;
+color: #666666;
+font-size:10px;
+font-weight:normal;
+padding-right:5px;
+}
+
+.input {
+	margin:0px;
+	padding:0px;
+	widows:100px;
+	height:20px;
+	font-family: verdana;
+	font-size: 11px;
+	color: #666666;
+	border: 1px solid #999999;
+	background:none;
+}
+
+/*select {
+	margin:0px;
+	padding:0px;
+	widows:100px;
+	height:20px;
+	font-family: verdana;
+	font-size: 11px;
+	font-color: #666666;
+	border: 1px solid #999999;
+	background:none;
+}-*/
+
+.btn {
+	margin:0px;
+	padding:0px;
+	widows:100px;
+	height:20px;
+	font-family: verdana;
+	font-weight:bold;
+	font-size: 11px;
+	font-color: #666666;
+	border: 1px solid #999999;
+	background-image: url(../images/btn.gif);
+}
+.tdmarksgr{
+border:0px solid #000000;
+margin-top:10px;
+margin-bottom:5px;
+}
+.tdmarks{
+border:2px solid #000000;
+ 
+}

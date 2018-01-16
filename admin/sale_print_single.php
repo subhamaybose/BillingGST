@@ -1,0 +1,577 @@
+<?php
+
+	include("../includes/config.php");include("sessiontime.php");
+	include('convert.php');
+	
+	//$conversion_obj = new Convert();
+	//get bill id from 
+	$the_bill_no = $_REQUEST['bill_no'];
+	$sql_sale = "select * from sales_order where bill_no = '" . $the_bill_no . "'";
+	$tok_sale = mysql_query($sql_sale);
+	$data_sale = mysql_fetch_assoc($tok_sale);
+?>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>A.S.M.I.</title>
+	<style type="text/css">
+		body td
+		{
+			font-family:Verdana, Arial, Helvetica, sans-serif;
+			font-size:11px;
+		}
+	</style>
+	<script type="text/javascript" src="../js/prototype.js"></script>
+
+<script>
+function roundNumber(rnum, rlength) { // Arguments: number to round, number of decimal places
+  var newnumber = Math.round(rnum*Math.pow(10,rlength))/Math.pow(10,rlength);
+  return newnumber; // Output the result to the form field (change for your purposes)
+}
+ function saveExtra()
+{
+var bill_no='<?=$_REQUEST['bill_no']?>';
+var vfreight=document.getElementById('freight').value;
+var vr_r_cn_no=document.getElementById('r_r_cn_no').value;
+ 
+document.getElementById("net_amount").value=parseFloat(document.getElementById("net_amount").value)-parseFloat(document.getElementById("old_freight").value)+parseFloat(document.getElementById("freight").value);
+document.getElementById("net_amount").value=roundNumber(document.getElementById("net_amount").value,2);
+//document.getElementById("net_amount").value=document.getElementById("net_amount").value.toFixed(2);
+
+var parameterString ='r_r_cn_no='+vr_r_cn_no+'&freight='+vfreight+'&bill_no='+bill_no+'&net_amount='+document.getElementById("net_amount").value; 
+		//	+	'&comments='+document.getElementById("comments").value;
+var loc1='./saveextra.php';
+ var newAJAX = new Ajax.Request(loc1, { 
+				method: 'get', 
+				parameters: parameterString,
+				onSuccess: function(transport) {
+				//var notice = $('maturity_amt');
+				 alert("Record Saved");
+				  if(document.getElementById("amtinwords"))
+ 					document.getElementById("amtinwords").innerHTML = transport.responseText;
+				    
+				 }
+	  		}
+	   );
+  }
+  
+  
+</script>
+
+
+<script type="text/javascript">
+function roundNumber(number,decimals) {
+	var newString;// The new rounded number
+	decimals = Number(decimals);
+	if (decimals < 1) {
+		newString = (Math.round(number)).toString();
+	} else {
+		var numString = number.toString();
+		if (numString.lastIndexOf(".") == -1) {// If there is no decimal point
+			numString += ".";// give it one at the end
+		}
+		var cutoff = numString.lastIndexOf(".") + decimals;// The point at which to truncate the number
+		var d1 = Number(numString.substring(cutoff,cutoff+1));// The value of the last decimal place that we'll end up with
+		var d2 = Number(numString.substring(cutoff+1,cutoff+2));// The next decimal, after the last one we want
+		if (d2 >= 5) {// Do we need to round up at all? If not, the string will just be truncated
+			if (d1 == 9 && cutoff > 0) {// If the last digit is 9, find a new cutoff point
+				while (cutoff > 0 && (d1 == 9 || isNaN(d1))) {
+					if (d1 != ".") {
+						cutoff -= 1;
+						d1 = Number(numString.substring(cutoff,cutoff+1));
+					} else {
+						cutoff -= 1;
+					}
+				}
+			}
+			d1 += 1;
+		} 
+		if (d1 == 10) {
+			numString = numString.substring(0, numString.lastIndexOf("."));
+			var roundedNum = Number(numString) + 1;
+			newString = roundedNum.toString() + '.';
+		} else {
+			newString = numString.substring(0,cutoff) + d1.toString();
+		}
+	}
+	if (newString.lastIndexOf(".") == -1) {// Do this again, to the new string
+		newString += ".";
+	}
+	var decs = (newString.substring(newString.lastIndexOf(".")+1)).length;
+	for(var i=0;i<decimals-decs;i++) newString += "0";
+	//var newNumber = Number(newString);// make it a number if you like
+	return newString; // Output the result to the form field (change for your purposes)
+}
+
+</script>
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+	
+</head>
+<body >
+	
+	<table border="1px solid black" width="100%">
+		<tr>
+			<td width="35%" align="right">
+				Original/Duplicate/Triplicate
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table width="100%">
+					<tr>
+						<td width="35%"></td>
+						<td align="center">
+							<span style="font-size:20px; font-weight:bold;">TAX INVOICE</span>
+						</td>
+						<td width="35%"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table width="100%">
+					<tr>
+						<td align="center">
+							<span style="font-size:27px; font-weight:bold;">Associated Scientific Mfg. Industries</span>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<table border="1px solid black" width="100%">
+					<tr>
+						<td width="27%">
+							<table width="100%">
+								<tr>
+									<td>VAT NO.&nbsp;&nbsp; : 19301344017</td>
+								</tr>
+								<tr>
+									<td>C.S.T.NO. : 19301344211</td>
+								</tr>
+								<tr>
+									<td>PAN No.&nbsp;&nbsp;&nbsp; : AFMPB6687D</td>
+								</tr>
+								<tr>
+									<td>E.M.NO.&nbsp;&nbsp;&nbsp; : 190171105238</td>
+								</tr>
+							</table>
+						</td>
+						<td width="73%">
+							<table width="100%">
+								<tr>
+									<td>
+									<!--	<h1 style="color:#336699">Associated Scientific Mfg. Industries</h1>	-->
+										<span>Spl. In: Sintered Glass Ware &amp; Micro Filtration Assembly</span><br />
+										10, Bhairab Mukherjee Lane, Kolkata - 700 004 (Opp. R.G. Kar Hospital Emergency Building)<br />
+										Phone : 033-2554-8602, 2543-1010 &amp; Mobile: +91 9830606770<br />
+										E-mail: info@sinteredglassware.com / associatedscientificmfgind@yahoo.co.in<br />
+										Web Site : www.sinteredglassware.com
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table border="1px solid black" width="100%">
+					<tr height="20px;">
+						<td width="50%">TAX INVOICE No. <?php echo $data_sale['bill_no'] ?></td>
+						<td width="15%">DATE</td>
+						<td width="15%"><?php echo date('d-m-Y', strtotime($data_sale['bill_date'])) ?></td>
+						<td width="10%" align="right">Pkg(s)</td>
+						<td width="10%"><?php echo $data_sale['packing_qty'] ?></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table width="100%">
+					<tr>
+						<td width="49%" valign="top" height="100%">
+							<table width="100%" height="100%">
+								<?php
+									$sql_cust = "select * from party_master where party_id = '" . $data_sale['party_id'] . "'";
+									$tok_cust = mysql_query($sql_cust);
+									$data_cust = mysql_fetch_assoc($tok_cust);
+								?>
+								<tr>
+									<td height="100%">
+										To<br />
+										<?php
+											echo $data_cust['party_name'];
+										?>
+										<br />
+										<?php
+											echo $data_cust['party_address'];
+										?>
+										<br />
+										<?php
+											if(trim($data_cust['party_phone']) != '')
+											{
+												echo "Phone No.: " . $data_cust['party_phone'] . '<br />';
+											}
+											
+											if(trim($data_cust['party_mobile']) != '')
+											{
+												echo "Mobile No.: " . $data_cust['party_mobile'];
+											}
+										?>
+										
+										<?php
+											if(trim($data_cust['party_vat_no']) != '')
+											{
+												echo "<br />";
+												echo "Vat No.&nbsp;&nbsp;&nbsp;: " . $data_cust['party_phone'];
+											}
+										?>
+										
+										<?php
+											if(trim($data_cust['party_cst_no']) != '')
+											{
+												echo "<br />";
+												echo "CST No.&nbsp;&nbsp;&nbsp;: " . $data_cust['party_cst_no'];
+											}
+										?>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td style="padding-left:5px;">
+							<table width="100%">
+								<tr>
+									<td>
+										<table border="1px solid black" width="100%" height="100%">
+											<tr>
+												<td width="25%">ORDER NO.</td>
+												<td width="42%"><?php echo $data_sale['sales_order_id'] ?></td>
+												<td width="13%">DATE</td>
+												<td width="20%"><?php echo date('d-m-Y', strtotime($data_sale['sales_order_date'])) ?></td>
+											</tr>
+											<tr>
+												<td width="25%">CHALLAN NO.</td>
+												<td><?php echo $data_sale['challan_no'] ?></td>
+												<td width="13%">DATE</td>
+												<td><?php echo date('d-m-Y', strtotime($data_sale['challan_date'])) ?> </td>
+											</tr>
+											<tr>
+												<td width="25%">R.R./CN NO.</td>
+												<td valign="top"><?php //echo $data_sale['r_r_cn_no'] ?>
+												
+												<input name="r_r_cn_no" class="input" id="r_r_cn_no" tabindex="7" value="<?php echo $data_sale["r_r_cn_no"]?>" size="20" style="font-weight:bold"/>
+												</td>
+												<td width="13%">DATE</td>
+												<td valign="top"><?php echo date('d-m-Y', strtotime($data_sale['r_r_cn_date'])) ?></td>
+											</tr>
+											<tr>
+												<td width="25%">TRANSPORTER</td>
+												<td valign="top" colspan="3">
+													<?php
+														$sql_tra = "select transporter_name from transporter_master where transporter_id = '" . $data_sale['transporter_id'] . "'";
+														$tok_tra = mysql_query($sql_tra);
+														$data_tra = mysql_fetch_assoc($tok_tra);
+														echo $data_tra['transporter_name'];
+													?></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table border="1px solid black" width="100%">
+					<tr>
+						<td width="5%">SL. NO.</td>
+						<td width="45%">DESCRIPTION OF MATERIALS</td>
+						<td width="10%" align="center">GRADE</td>
+						<td width="10%" align="center">CAPACITY</td>
+						<td width="10%" align="center">QUANTITY</td>
+						<td width="10%" align="center">RATE PER UNIT</td>
+						<td width="10%" align="center">AMOUNT</td>
+					</tr>
+					
+					<!-- Dynamic Row START-->
+					<?php
+					//Let's get the item relationship
+					$sql_item = "select * from sales_order_details where sales_order_id = '" . $data_sale['bill_no'] . "'";
+					$tok_item = mysql_query($sql_item);
+					$row_ctr = 1;
+					while($data_item = mysql_fetch_assoc($tok_item))
+					{
+						
+						//The item name etc
+						$sql_details = "select * from item_master where item_id = '" . $data_item['item_id'] . "'";
+						$tok_details = mysql_query($sql_details);
+						$data_details = mysql_fetch_assoc($tok_details);
+						
+						//The unit etc
+						//$sql_unit = "select unit_name from unit_master where item_id = '" . $data_details['item_unit'] . "'";
+						$sql_unit = "select unit_name from unit_master where unit_id = '" . $data_details['unit_id'] . "'";
+						$tok_unit = mysql_query($sql_unit);
+						$data_unit = mysql_fetch_assoc($tok_unit);
+						?>
+						<tr>
+							<td><?php echo $row_ctr ?></td>
+							<td><?php echo $data_details['item_name'] . "<br /><i>" . $data_item['item_decription'] . '</i>' ?></td>
+							<td align="center"><?php echo $data_item['category'] ?></td>
+							<td align="right"><?php echo $data_item['capacity'] ?></td>
+							<?php
+								//Fecth unit
+								$sql_unit = "select unit_name from unit_master where unit_id = '" . $data_item['item_unit'] . "'";
+								$tok_unit = mysql_query($sql_unit);
+								$data_unit = mysql_fetch_assoc($tok_unit);
+							?>
+							<td align="right"><?php echo $data_item['item_qty'] . ' ' . $data_unit['unit_name']; ?></td>
+							<td align="right"><?php echo $data_item['item_rate'] ?></td>
+							<td align="right"><?php echo $data_item['item_amount'] ?></td>
+						</tr>
+						<?php
+						$row_ctr++;
+					}
+					?>
+					<!-- Fill Up vacat rows for the sake of bill symetry -->
+					<?php
+					for($vac_row = $row_ctr; $vac_row <= 10; $vac_row++)
+					{
+						?>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+						<?php
+					}
+					?>
+					<!-- Dynamic Row END -->
+					<tr height="20px;">
+						<!--<td colspan="5">AMOUNT</td>-->
+						<td colspan="5">&nbsp;</td>
+						<td align="right">Total</td>
+						<td align="right">
+						<?php 
+						//echo round($data_sale['sales_order_amount'], 2); 
+						echo number_format(round($data_sale['sales_order_amount'],0),2,'.',',');
+						?></td>
+					</tr>
+					<?php
+					if($data_cust['party_cst_pcent'] != "" and $data_cust['party_cst_pcent'] != 0)
+					{
+					?>
+					<tr>
+						<td colspan="6" align="right">
+						ADD CST @<?php echo $data_cust['party_cst_pcent']; ?>%
+						</td>
+						<td align="right">
+							<?php 
+							//echo round($data_sale['cst'], 2); 
+							echo number_format(round($data_sale['cst'],0),2,'.',',');
+							$add_on_amnt = $add_on_amnt + $data_sale['cst'];
+							?>
+						</td>
+					</tr>
+					<tr height="20px;">
+						<!--<td colspan="5">AMOUNT</td>-->
+						<td colspan="5">&nbsp;</td>
+						<td align="right">Total</td>
+						<td align="right">
+						<?php 
+						$add_on_amnt = $add_on_amnt + $data_sale['sales_order_amount'];
+					    //echo round($add_on_amnt);
+						//echo str_pad($add_on_amnt,2,"00",STR_PAD_RIGHT);
+					    echo number_format(round($add_on_amnt,0),2,'.',',');
+						?>
+						</td>
+					</tr>
+					<?php
+					}
+					
+					if($data_cust['party_vat_pcent'] != "" and $data_cust['party_vat_pcent'] != 0)
+					{
+					?>
+					<tr>
+						<td colspan="6" align="right">
+						ADD VAT @<?php echo $data_cust['party_vat_pcent']; ?>%
+						</td>
+						<td align="right">
+							<?php 
+							//echo round($data_sale['vat'], 2); 
+							echo number_format(round($data_sale['vat'],0),2,'.',',');
+							$add_on_amnt = $add_on_amnt + $data_sale['vat'];
+							?>
+						</td>
+					</tr>
+					<tr height="20px;">
+						<!--<td colspan="5">AMOUNT</td>-->
+						<td colspan="5">&nbsp;</td>
+						<td align="right">Total</td>
+						<td align="right">
+						<?php 
+						$add_on_amnt = $add_on_amnt + $data_sale['sales_order_amount'];
+						//echo round($add_on_amnt);
+						echo number_format(round($add_on_amnt,0),2,'.',',');
+						?>
+						</td>
+					</tr>
+					<?php
+					}
+					
+					if($data_cust['party_tax_deposit'] != "" and $data_cust['party_tax_deposit'] != 0)
+					{
+					?>
+					<tr>
+						<td colspan="6" align="right">
+						ADD TAX DEPOSITED @<?php echo $data_cust['party_tax_deposit']; ?>%
+						</td>
+						<td align="right">
+							<?php 
+							//echo round($data_sale['tax_deposit'], 2); 
+							echo number_format(round($data_sale['tax_deposit'],0),2,'.',',');
+							$add_on_amnt = $add_on_amnt + $data_sale['tax_deposit'];
+							?>
+						</td>
+					</tr>
+					<tr height="20px;">
+						<!--<td colspan="5">AMOUNT</td>-->
+						<td colspan="5">&nbsp;</td>
+						<td align="right">Total</td>
+						<td align="right">
+						<?php 
+						//$add_on_amnt = $add_on_amnt + $data_sale['sales_order_amount'];
+						//echo round($add_on_amnt);
+						echo number_format(round($add_on_amnt,0),2,'.',',');
+						?>
+						</td>
+					</tr>
+					<?php
+					}
+					
+					if($data_sale['discount'] != "" and $data_sale['discount'] != 0)
+					{
+					?>
+					<tr>
+						<td colspan="6" align="right">
+						LESS DISCOUNT
+						</td>
+						<td align="right">
+							<?php 
+							//echo round($data_sale['discount'], 2); 
+							echo number_format(round($data_sale['discount'],0),2,'.',',');
+							$add_on_amnt = $add_on_amnt - $data_sale['discount'];
+							?>
+						</td>
+					</tr>
+					<tr height="20px;">
+						<!--<td colspan="5">AMOUNT</td>-->
+						<td colspan="5">&nbsp;</td>
+						<td align="right">Total</td>
+						<td align="right">
+						<?php 
+						//$data_sale = $data_sale['sales_order_amount'] - $add_on_amnt;
+						//echo round($add_on_amnt);
+						echo number_format(round($add_on_amnt,0),2,'.',',');
+						?>
+						</td>
+					</tr>
+					<?php
+					}
+					
+					//if($data_sale['freight'] != "" and $data_sale['freight'] != 0)
+					//{
+					?>
+					<tr>
+						<td colspan="6" align="right">
+						ADD FREIGHT
+						</td>
+						<td align="right">
+							<?php 
+							//echo round($data_sale['freight'], 2); 
+							//echo number_format(round($data_sale['freight'],0),2,'.',',');
+							 $add_on_amnt = $add_on_amnt + $data_sale['freight'];
+							?>
+							
+							<input name="freight" class="input" id="freight" tabindex="12"  size="20" value="<?php echo  $data_sale['freight'];?>" style="border:none;text-align:right; font-weight:bold" />
+							<input name="old_freight" type="hidden" id="old_freight" value="<?php echo  $data_sale['freight'];?>"    />
+						</td>
+					</tr>
+					<?php
+					//}
+					?>
+					<!-- Dynamic Row END -->
+					<?php
+					
+					if($data_sale['remarks'] != NULL and $data_sale['remarks'] != "")
+					{
+						?>
+						<tr height="20px;">
+							<td colspan="7">REMARKS: <?php echo $data_sale['remarks'] ?></td>	
+						</tr>
+						<?php
+					}
+					?>
+					<tr height="20px;">
+						<td colspan="5">Rupees <span id="amtinwords"><?php $final_amount=round($add_on_amnt , 0);
+					  $conversion_obj = new Convert($final_amount, $currency="Only"); $conversion_obj->display(); ?></span>.</td>
+						<td align="right">Net Total</td>
+						<td align="right">
+						<?php 
+						//echo round($add_on_amnt, 0); 
+						//echo number_format(round($add_on_amnt,0),2,'.',',');
+						?>
+						<input name="net_amount" class="input" id="net_amount" tabindex="112"  size="20" value="<?php echo number_format(round($data_sale['net_amount'],0),2,'.',',');?>" onChange="calculateSaleTotals();" style="border:none;text-align:right; font-weight:bold" readonly="readonly" />
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table width="100%" border="1px solid black;">
+					<tr>
+						<td width="50%">
+							<ol>
+								<li>No Claims for shortage, damage, breakage etc will be entertained after the goods leaves our premises, if not insured.</li>
+								<li>Goods once sold can not be taken back.</li>
+								<li>All disputes subject to Kolkata jurisdiction only.</li>
+								<li>Interest @18% will be charged if payment is not made within 30 days.</li>
+							</ol>
+						</td>
+						<td align="center">
+							E.& O.E.<br />
+							<span><i>For</i> <strong>Associated Scientific Mfg. Industries</strong>
+							<br />
+							<br /><br /><br /><br />
+							<strong>AUTHORISED SIGNATORY</strong></span>
+					
+					<div style="border:0px!important;position:relative">
+					<!--<input type="button" value="Print" id="Print" onClick="javascript:this.style.display=\'none\';document.getElementById(\'bck\').style.display=\'none\';window.print();">&nbsp;<input id="bck" type="button" value="Back to Sales" onClick="javascript:window.location.href=\'./sales_list.php\'">--> 
+					<input type="button" value="Print" id="Print" onClick="javascript:saveExtra();this.style.display='none';document.getElementById('bck').style.display='none';window.print();">&nbsp;
+					<input id="bck" type="button" value="Back to Sales" onClick="javascript:window.location.href='./sales_list.php'">
+ 					
+					</div>
+					
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+ 	</table>
+</body>
+</html>
